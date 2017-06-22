@@ -30,7 +30,9 @@ def download_s3(bucket, key, output_location):
         return False
 
 
-def to_ist_string(time_in_utc, input_format=None, output_format=None):
+def to_ist_string(time_in_utc,
+                  input_format='%Y-%m-%dT%H:%M:%S',
+                  output_format='%Y-%m-%d %H:%M:%S'):
     """
     Converts given UTC time to IST, returns string in opted output_format.
 
@@ -46,38 +48,38 @@ def to_ist_string(time_in_utc, input_format=None, output_format=None):
     select * from bookings.hotels where bookingdate >
     '2017-02-02 05:30:00'::TIMESTAMP
 
-    Now you may use this macro inside redshift, bash, docker operators which supports
-    jinja templating.
+    Now you may use this macro inside redshift, bash, docker operators which
+    supports jinja templating.
 
-    :param time_in_utc: Datetime String in UTC which adheres to given Input format
-    :param input_format: Format for Input time, defaults to '%Y-%m-%dT%H:%M:%S'
-    :param output_format: Format for Output time, defaults to '%Y-%m-%d %H:%M:%S'
+    :param time_in_utc: Datetime String in UTC which adheres to given
+    Input format
+    :param input_format: Format for Input time,
+    defaults to '%Y-%m-%dT%H:%M:%S'
+    :param output_format: Format for Output time,
+    defaults to '%Y-%m-%d %H:%M:%S'
     :return: String, Datetime in IST timezone.
     """
     from datetime import datetime, timedelta
-    if not input_format:
-        input_format = '%Y-%m-%dT%H:%M:%S'
-    if not output_format:
-        output_format = '%Y-%m-%d %H:%M:%S'
     return (datetime.strptime(time_in_utc, input_format) +
             timedelta(hours=5,
                       minutes=30)).strftime(output_format)
 
 
-def to_utc_string(time_in_ist, input_format=None, output_format=None):
+def to_utc_string(time_in_ist,
+                  input_format='%Y-%m-%dT%H:%M:%S',
+                  output_format='%Y-%m-%d %H:%M:%S'):
     """
     Very similar to to_ist_string.
     Converts given IST time to UTC, returns string in opted output_format.
-    :param time_in_ist: Datetime String in IST which adheres to given Input format
-    :param input_format: Format for Input IST time, defaults to '%Y-%m-%dT%H:%M:%S'
-    :param output_format: Format for Output IST time, defaults to '%Y-%m-%d %H:%M:%S'
+    :param time_in_ist: Datetime String in IST which adheres to
+    given Input format.
+    :param input_format: Format for Input IST time,
+    defaults to '%Y-%m-%dT%H:%M:%S'
+    :param output_format: Format for Output IST time,
+    defaults to '%Y-%m-%d %H:%M:%S'
     :return: String, Datetime in UTC timezone.
     """
     from datetime import datetime, timedelta
-    if not input_format:
-        input_format = '%Y-%m-%dT%H:%M:%S'
-    if not output_format:
-        output_format = '%Y-%m-%d %H:%M:%S'
     return (datetime.strptime(time_in_ist, input_format) -
             timedelta(hours=5,
                       minutes=30)).strftime(output_format)
