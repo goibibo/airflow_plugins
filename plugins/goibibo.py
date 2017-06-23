@@ -1,4 +1,8 @@
+from datetime import datetime, timedelta
+
+import boto3
 from airflow.plugins_manager import AirflowPlugin
+from botocore.client import Config
 
 
 def download_s3(bucket, key, output_location):
@@ -19,9 +23,6 @@ def download_s3(bucket, key, output_location):
     :return: True for success, else False.
     """
     try:
-        import boto3
-        from botocore.client import Config
-        from botocore.exceptions import ClientError
         s3 = boto3.resource('s3', config=Config(signature_version='s3v4'))
         buck = s3.Bucket(bucket)
         buck.download_file(key, output_location)
@@ -59,7 +60,6 @@ def to_ist_string(time_in_utc,
     defaults to '%Y-%m-%d %H:%M:%S'
     :return: String, Datetime in IST timezone.
     """
-    from datetime import datetime, timedelta
     return (datetime.strptime(time_in_utc, input_format) +
             timedelta(hours=5,
                       minutes=30)).strftime(output_format)
@@ -79,11 +79,36 @@ def to_utc_string(time_in_ist,
     defaults to '%Y-%m-%d %H:%M:%S'
     :return: String, Datetime in UTC timezone.
     """
-    from datetime import datetime, timedelta
     return (datetime.strptime(time_in_ist, input_format) -
             timedelta(hours=5,
                       minutes=30)).strftime(output_format)
 
+
+def ts_add_days(timestamp_in_ts,
+                days_to_add,
+                ts_format='%Y-%m-%dT%H:%M:%S'):
+    """
+    Add days to TS.
+    :param timestamp_in_ts:
+    :param days_to_add:
+    :param ts_format:
+    :return:
+    """
+    return (datetime.strptime(timestamp_in_ts, ts_format) + timedelta(
+        days=days_to_add)).strftime(ts_format)
+
+def ts_add_hours(timestamp_in_ts,
+                hours_to_add,
+                ts_format='%Y-%m-%dT%H:%M:%S'):
+    """
+    Add days to TS.
+    :param timestamp_in_ts:
+    :param hours_to_add:
+    :param ts_format:
+    :return:
+    """
+    return (datetime.strptime(timestamp_in_ts, ts_format) + timedelta(
+        hours=hours_to_add)).strftime(ts_format)
 
 class GoAirflow(AirflowPlugin):
     name = "go"
