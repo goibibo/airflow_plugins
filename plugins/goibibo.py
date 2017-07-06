@@ -85,7 +85,7 @@ def to_utc_string(time_in_ist,
 
 
 def ts_add_days(timestamp_in_ts,
-                days_to_add,
+                days_to_add = 1,
                 ts_format='%Y-%m-%dT%H:%M:%S'):
     """
     Add days to TS.
@@ -98,7 +98,7 @@ def ts_add_days(timestamp_in_ts,
         days=days_to_add)).strftime(ts_format)
 
 def ts_add_hours(timestamp_in_ts,
-                hours_to_add,
+                hours_to_add = 1,
                 ts_format='%Y-%m-%dT%H:%M:%S'):
     """
     Add days to TS.
@@ -118,7 +118,7 @@ class GoAirflow(AirflowPlugin):
     # A list of class(es) derived from BaseExecutor
     executors = []
     # A list of references to inject into the macros namespace
-    macros = [to_utc_string, to_ist_string]
+    macros = [to_utc_string, to_ist_string, ts_add_days, ts_add_hours]
     # A list of objects created from a class derived
     # from flask_admin.BaseView
     admin_views = []
